@@ -1,0 +1,15 @@
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb+srv://user123:user123@cluster0.0gmnbgu.mongodb.net/schooldb')
+
+.then(() => {
+  console.log('Connected to MongoDB - Fee Service');
+})
+.catch(err => {
+  console.error('MongoDB connection error:', err);
+});
+
+mongoose.connection.once('open', () => {
+  console.log('MongoDB connection is open');
+});
+module.exports = mongoose;
