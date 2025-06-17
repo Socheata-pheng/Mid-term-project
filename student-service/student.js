@@ -34,9 +34,10 @@ app.get('/students', async (req, res) => {
 });
 
 // Get a student by ID
+// Get a student by studentId
 app.get('/students/:id', async (req, res) => {
   try {
-    const student = await Student.findById(req.params.id);
+    const student = await Student.findOne({ studentId: req.params.id });
     if (!student) return res.status(404).json({ error: 'Student not found' });
     res.json(student);
   } catch (err) {
@@ -44,10 +45,14 @@ app.get('/students/:id', async (req, res) => {
   }
 });
 
-// Update a student
+// Update a student by studentId
 app.put('/students/:id', async (req, res) => {
   try {
-    const student = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const student = await Student.findOneAndUpdate(
+      { studentId: req.params.id },
+      req.body,
+      { new: true }
+    );
     if (!student) return res.status(404).json({ error: 'Student not found' });
     res.json(student);
   } catch (err) {
@@ -55,16 +60,17 @@ app.put('/students/:id', async (req, res) => {
   }
 });
 
-// Delete a student
+// Delete a student by studentId
 app.delete('/students/:id', async (req, res) => {
   try {
-    const student = await Student.findByIdAndDelete(req.params.id);
+    const student = await Student.findOneAndDelete({ studentId: req.params.id });
     if (!student) return res.status(404).json({ error: 'Student not found' });
     res.json({ message: 'Student deleted successfully' });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 });
+
 
 // =======================
 // Start Server
