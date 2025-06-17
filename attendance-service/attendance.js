@@ -18,24 +18,33 @@ app.post('/attendance', async (req, res) => {
   }
 });
 
-// GET: Attendance summary by student ID
-app.get('/attendance/:studentId', async (req, res) => {
+// GET: Attendance summary by studentId
+app.get('/attendance/:studentId/summary', async (req, res) => {
   try {
-    const records = await Attendance.find({ studentId: req.params.studentId });
+    const studentId = req.params.studentId;
+    const records = await Attendance.find({ studentId });
+
     const presentDays = records.filter(r => r.status === 'present').length;
     const totalDays = records.length;
     const percentage = totalDays ? (presentDays / totalDays) * 100 : 0;
 
-    res.json({ presentDays, totalDays, percentage });
+    res.json({
+      studentId,
+      totalDays,
+      presentDays,
+      percentage: percentage.toFixed(2) + '%'
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// GET: All attendance records
+// GET: All attendance records (optionally filter by studentId)
 app.get('/attendance', async (req, res) => {
   try {
-    const records = await Attendance.find();
+    const { studentId } = req.query;
+    const filter = studentId ? { studentId } : {};
+    const records = await Attendance.find(filter);
     res.json(records);
   } catch (err) {
     res.status(500).json({ error: err.message });
