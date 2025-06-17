@@ -35,27 +35,27 @@ function authRole(...allowedRoles) {
 // ---- ROUTE FOR EACH MICROSERVICE ---- //
 
 app.use('/student', authToken, authRole('teacher'), (req, res) => {
-    proxy.web(req, res, { target: 'http://localhost:3001' });
+    proxy.web(req, res, { target: 'http://44.201.79.110:3001' });
 });
 
 app.use('/attendance', authToken, authRole('teacher'), (req, res) => {
-    proxy.web(req, res, { target: 'http://localhost:3005' });
+    proxy.web(req, res, { target: 'http://3.87.210.76:3005' });
 });
 
 app.use('/fee', authToken, authRole('admin'), (req, res) => {
-    proxy.web(req, res, { target: 'http://localhost:3006' });
+    proxy.web(req, res, { target: 'http://54.147.54.39:3006' });
 });
 
 app.use('/auth', (req, res) => {
-    proxy.web(req, res, { target: 'http://localhost:3000' });
+    proxy.web(req, res, { target: 'http://54.210.234.46:3000' });
 });
 
 app.use('/course', authToken, authRole('teacher'), (req, res) => {
-    proxy.web(req, res, { target: 'http://localhost:3002' });
+    proxy.web(req, res, { target: 'http://44.202.148.138:3002' });
 });
 
 app.use('/result', authToken, authRole('teacher'), (req, res) => {
-    proxy.web(req, res, { target: 'http://localhost:3004' });
+    proxy.web(req, res, { target: 'http://52.207.98.41:3004' });
 });
 
 // ---- START GATEWAY ---- //
