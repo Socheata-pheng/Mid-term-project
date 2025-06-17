@@ -12,13 +12,13 @@ app.use(express.json());
 const Student = mongoose.model(
   'Student',
   new mongoose.Schema({
-    studentId: { type: String, required: true, unique: true }, // make sure your schema has this
+    studentId: { type: String, required: true, unique: true },
     name: String,
     dob: Date,
     class: String,
     email: String,
   }),
-  'students' // actual collection name
+  'students'
 );
 
 // =======================
@@ -28,7 +28,7 @@ const Student = mongoose.model(
 // Create a course
 app.post('/courses', async (req, res) => {
   try {
-    const course = new Course(req.body);
+    const course = new Course(req.body); // Must contain courseId
     await course.save();
     res.status(201).json(course);
   } catch (err) {
@@ -46,20 +46,18 @@ app.get('/courses', async (req, res) => {
   }
 });
 
-// Enroll a student in a course by studentId
+// Enroll a student using custom courseId and studentId
 app.post('/courses/:courseId/enroll', async (req, res) => {
   try {
     const { courseId } = req.params;
     const { studentId } = req.body;
 
-    const course = await Course.findById(courseId);
+    const course = await Course.findOne({ courseId });
     if (!course) return res.status(404).json({ error: 'Course not found' });
 
-    // Find student by custom studentId
     const student = await Student.findOne({ studentId });
     if (!student) return res.status(404).json({ error: 'Student not found' });
 
-    // course.students is array of studentId strings
     if (!course.students.includes(studentId)) {
       course.students.push(studentId);
       await course.save();
@@ -71,14 +69,13 @@ app.post('/courses/:courseId/enroll', async (req, res) => {
   }
 });
 
-// Get all students in a course by studentId array
-app.get('/courses/:id/students', async (req, res) => {
+// Get all students enrolled in a course by courseId
+app.get('/courses/:courseId/students', async (req, res) => {
   try {
-    const course = await Course.findById(req.params.id);
+    const { courseId } = req.params;
+    const course = await Course.findOne({ courseId });
     if (!course) return res.status(404).json({ error: 'Course not found' });
 
-    // course.students is array of studentId strings
-    // Fetch students from students collection where studentId in course.students
     const students = await Student.find({ studentId: { $in: course.students } });
 
     res.json(students);
