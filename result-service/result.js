@@ -17,10 +17,26 @@ app.post('/results', async (req, res) => {
   }
 });
 
-// Update result by ID
+// Update result by MongoDB _id
 app.put('/results/:id', async (req, res) => {
   try {
     const result = await Result.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!result) return res.status(404).json({ message: 'Result not found' });
+    res.json(result);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Update result by studentId and courseId
+app.put('/results/student/:studentId/course/:courseId', async (req, res) => {
+  try {
+    const { studentId, courseId } = req.params;
+    const result = await Result.findOneAndUpdate(
+      { studentId, courseId },
+      req.body,
+      { new: true }
+    );
     if (!result) return res.status(404).json({ message: 'Result not found' });
     res.json(result);
   } catch (err) {
