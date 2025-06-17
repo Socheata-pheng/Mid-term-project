@@ -1,4 +1,5 @@
 const express = require('express');
+require('./dbconnection');
 const Attendance = require('./attendance-schema');
 
 const app = express();

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb+srv://user123:user123@cluster0.0gmnbgu.mongodb.net/schooldb')
 
 .then(() => {
-  console.log('Connected to MongoDB - Student Service');
+  console.log('Connected to MongoDB - result Service');
 })
 .catch(err => {
   console.error('MongoDB connection error:', err);

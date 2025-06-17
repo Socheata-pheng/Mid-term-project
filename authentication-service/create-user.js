@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const User = require('./user-schema');
 require('dotenv').config();
 
-mongoose.connect('mongodb://mongodb:27017/auth')
-
+mongoose.connect('mongodb+srv://user123:user123@cluster0.0gmnbgu.mongodb.net/schooldb')
 const seedUsers = async () => {
   await User.deleteMany({});
   await User.create([

@@ -1,4 +1,4 @@
-const mongoose = require('../dbconnection');
+const mongoose = require('./dbconnection');
 
 const ResultSchema = new mongoose.Schema({
   studentId: String,

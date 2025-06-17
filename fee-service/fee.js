@@ -1,4 +1,5 @@
 const express = require('express');
+require('./dbconnection');
 const Fee = require('./fee-schema');
 
 const app = express();

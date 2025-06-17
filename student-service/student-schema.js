@@ -1,7 +1,7 @@
-// student-schema.js
 const mongoose = require('mongoose');
 
 const studentSchema = new mongoose.Schema({
+  studentId: { type: String, unique: true, required: true }, // unique student ID
   name: String,
   dob: Date,
   class: String,

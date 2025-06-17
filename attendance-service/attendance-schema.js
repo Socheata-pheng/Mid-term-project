@@ -1,4 +1,4 @@
-const mongoose = require('../dbconnection');
+const mongoose = require('./dbconnection');
 
 const AttendanceSchema = new mongoose.Schema({
   studentId: String,

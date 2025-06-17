@@ -5,7 +5,8 @@ require('dotenv').config();
 
 const app = express();
 const proxy = httpProxy.createProxyServer();
-const JWT_SECRET = process.env.JWT_SECRETE;
+const JWT_SECRET = process.env.JWT_SECRET || '52d5bb51a79ebc60a3a255c6de212f5967318db0343124c6a2b0f0a1b4699b9ee9f05a66cc370440a88d1c61e509a017e904410aa030';
+
 
 // Middleware: Authenticate Token
 function authToken(req, res, next) {
