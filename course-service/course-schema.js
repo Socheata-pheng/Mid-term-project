@@ -1,10 +1,9 @@
-// course-schema.js
 const mongoose = require('mongoose');
 
 const courseSchema = new mongoose.Schema({
   name: String,
   description: String,
-  students: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Student' }],
+  students: [String],  // store studentId strings here
 });
 
 const Course = mongoose.model('Course', courseSchema);
