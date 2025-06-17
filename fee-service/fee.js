@@ -18,26 +18,56 @@ app.post('/fees', async (req, res) => {
   }
 });
 
-// GET: Fee summary by student ID
+// GET: Fee summary by studentId (custom ID)
 app.get('/fees/:studentId', async (req, res) => {
   try {
-    const fees = await Fee.find({ studentId: req.params.studentId });
+    const studentId = req.params.studentId;
+
+    const fees = await Fee.find({ studentId });
     const totalPaid = fees.reduce((sum, fee) => sum + fee.amountPaid, 0);
-    const totalDue = 10000 - totalPaid; // Example assumption
+
+    const fullFee = 10000; // Example total fee for every student
+    const totalDue = Math.max(0, fullFee - totalPaid);
     const lateFee = totalDue > 0 ? 500 : 0;
 
-    res.json({ paid: totalPaid, due: totalDue, total: 10000, lateFee });
+    res.json({
+      studentId,
+      totalPaid,
+      totalDue,
+      fullFee,
+      lateFee,
+      records: fees,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// GET: Overdue students
+// GET: List all overdue students
 app.get('/fees/overdue', async (req, res) => {
   try {
+    const fullFee = 10000;
+
     const overdue = await Fee.aggregate([
-      { $group: { _id: '$studentId', totalPaid: { $sum: '$amountPaid' } } },
-      { $match: { totalPaid: { $lt: 10000 } } }
+      {
+        $group: {
+          _id: '$studentId',
+          totalPaid: { $sum: '$amountPaid' },
+        },
+      },
+      {
+        $match: {
+          totalPaid: { $lt: fullFee },
+        },
+      },
+      {
+        $project: {
+          studentId: '$_id',
+          totalPaid: 1,
+          totalDue: { $subtract: [fullFee, '$totalPaid'] },
+          _id: 0,
+        },
+      },
     ]);
 
     res.json(overdue);
